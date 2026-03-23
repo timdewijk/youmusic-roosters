@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouMusic Roosters</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; }
+
+.header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white; padding: 30px 20px; text-align: center;
+}
+.header h1 { font-size: 28px; margin-bottom: 5px; }
+.header p { font-size: 14px; opacity: 0.7; }
+
+.nav {
+    background: white; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    position: sticky; top: 0; z-index: 100;
+}
+.nav button {
+    padding: 8px 18px; border: 2px solid #ddd; border-radius: 20px;
+    background: white; cursor: pointer; font-size: 14px; font-weight: 500;
+    transition: all 0.2s;
+}
+.nav button:hover { border-color: #4472C4; color: #4472C4; }
+.nav button.active { background: #4472C4; color: white; border-color: #4472C4; }
+
+.content { max-width: 700px; margin: 20px auto; padding: 0 15px; }
+
+.docent-section { display: none; }
+.docent-section.active { display: block; }
+
+.docent-title {
+    font-size: 20px; font-weight: 700; margin-bottom: 15px;
+    padding-bottom: 8px; border-bottom: 2px solid #ddd;
+}
+.afdeling-badge {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    border-radius: 10px; background: #e8e8e8; margin-left: 8px;
+    font-weight: 400; vertical-align: middle;
+}
+
+.day-block { margin-bottom: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.day-header {
+    color: white; padding: 10px 15px; font-weight: 700; font-size: 15px;
+}
+.day-header .afd-label { font-size: 11px; opacity: 0.8; font-weight: 400; margin-left: 8px; }
+
+table { width: 100%; border-collapse: collapse; background: white; }
+th { background: #f0f4f8; padding: 8px 12px; font-size: 12px; text-align: center; color: #666; border-bottom: 1px solid #e0e0e0; }
+td { padding: 8px 12px; text-align: center; font-size: 13px; border-bottom: 1px solid #e0e0e0; color: #000; }
+td.naam-cel { text-align: left; }
+
+.note { font-size: 11px; color: #000; font-style: italic; }
+
+/* Actieve les — lichtblauw */
+tr.actie-nodig td { background: #bdd4ef; color: #000; }
+/* Proefles — fel geel */
+tr.proefles td { background: #ffff00; color: #000; }
+tr.proefles .note { color: #000; }
+/* Les met wijziging — oranje */
+tr.wijziging td { background: #ffb800; color: #000; }
+/* Pauze — licht rood */
+tr.pauze td { background: rgba(255, 0, 0, 0.15); color: #000; }
+/* Planning indicator (naam?) — wit */
+tr.planning td { background: #ffffff; color: #000; }
+/* Gepauzeerd — wit, cursief */
+tr.gepauzeerd td { background: #ffffff; color: #000; font-style: italic; }
+
+.status-pill {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px;
+    display: inline-block;
+}
+.status-actief { background: #bdd4ef; color: #000; }
+.status-proefles { background: #ffff00; color: #000; }
+.status-actie { background: #bdd4ef; color: #000; }
+.status-gepauzeerd { background: #e8e8e8; color: #666; }
+.status-gaat-stoppen { background: #ffb800; color: #000; }
+.status-gaat-starten { background: #ffb800; color: #000; }
+.status-planning { background: #ffffff; color: #000; border: 1px solid #ccc; }
+
+.update-info { text-align: center; padding: 20px; font-size: 12px; color: #999; }
+
+@media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .nav button { padding: 6px 12px; font-size: 12px; }
+    td, th { padding: 6px 8px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>YouMusic Muziekschool</h1>
+    <p>Docentenroosters</p>
+</div>
+
+<div class="nav" id="nav">
+    <button onclick="show('Chris')" id="btn-Chris">Chris</button>
+    <button onclick="show('Guus')" id="btn-Guus">Guus</button>
+    <button onclick="show('Lenard')" id="btn-Lenard">Lenard</button>
+    <button onclick="show('Lieke')" id="btn-Lieke">Lieke</button>
+    <button onclick="show('Liv')" id="btn-Liv">Liv</button>
+    <button onclick="show('Nynke')" id="btn-Nynke">Nynke</button>
+    <button onclick="show('Saranya')" id="btn-Saranya">Saranya</button>
+    <button onclick="show('Sjoerd')" id="btn-Sjoerd">Sjoerd</button>
+    <button onclick="show('Tijmen')" id="btn-Tijmen">Tijmen</button>
+    <button onclick="show('Tim')" id="btn-Tim">Tim</button>
+</div>
+<div class="content" id="content">
+<div class="docent-section" id="section-Chris">
+<div class="docent-title">Chris <span class="afdeling-badge">Drum</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #4472C4;">Maandag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:20</td><td class="naam-cel">Jurre Visscher 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:50</td><td class="naam-cel">Jonah Waterham 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:20</td><td class="naam-cel">Lukas van der Velde 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:50</td><td class="naam-cel">Jeroen hutten 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:20</td><td class="naam-cel">Eelke Talsma 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Christianl Jutten 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Joris de Leur 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Joost Hage 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Ton Timmerman 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #548235;">Dinsdag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Olaf van der Waarde 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Laurens Goeman 20m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Torre Jansen 20m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Boaz Schreur 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Fink Scherpenkate  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Bart Mekers 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Christiaan Boosman  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Jack Tausch 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Ahmed Elmi 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:30</td><td class="naam-cel">Gonca Ozturk 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Guus">
+<div class="docent-title">Guus <span class="afdeling-badge">Drum</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #C55A11;">Donderdag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Jesper Korporaal 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Maas Heute 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Ot van Schaik 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Finn 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Noah 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Jonas Venema Bancun 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Florian 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Mark 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:20</td><td class="naam-cel">Nova 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Femke Doorenbos 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Lenard">
+<div class="docent-title">Lenard <span class="afdeling-badge">Drum</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #BF8F00;">Woensdag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>14:30</td><td class="naam-cel">Beau Nagelhout 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Wietse Koers 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Joas van Bemmel 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Sil Boers  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:50</td><td class="naam-cel">Erik Bisschop 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:30</td><td class="naam-cel">Juune Heeselink</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Mart Zevenberg 20m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:20</td><td class="naam-cel">Marc Meijer 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:50</td><td class="naam-cel">Sepp van der Touw 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:20</td><td class="naam-cel">Mart Schilthuis 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:50</td><td class="naam-cel">Olaf Houdel 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:20</td><td class="naam-cel">Suzanne  Herpel  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Lieke">
+<div class="docent-title">Lieke <span class="afdeling-badge">Zang</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #548235;">Dinsdag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="wijziging"><td>15:00</td><td class="naam-cel">Yanick Stevens 30m / Roos proefles 24 maart<br><span class="note">Vanaf 25 maart naar de woensdag</span></td><td><span class="status-pill status-actief">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Isabel Muller 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Sophie Venekamp 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Geert Terwel 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Linda 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Bart Kelderman 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Jetske van Waveren 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Berber 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Mandy 30m (start 31 maart)</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:30</td><td class="naam-cel">Joost Derks 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #BF8F00;">Woensdag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Jetje Zuidhoek 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Annefleur van den tillaard 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Yasmin Cohen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="wijziging"><td>16:30</td><td class="naam-cel">Willeke van Hoorn 30m<br><span class="note">Gaat stoppen, 25 maart laatste les</span></td><td><span class="status-pill status-gaat-stoppen">Gaat stoppen</span></td></tr>
+<tr class="wijziging"><td>16:50</td><td class="naam-cel">Dione 31 maart proefles? 16:30</td><td><span class="status-pill status-planning">Planning</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Simone Broekman 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:30</td><td class="naam-cel">Yanick Stevens 30m vanaf 25 maart</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Jeffrey 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Chiel 60m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Fabian Brinkman / Eilise Verhoef 60m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Liv">
+<div class="docent-title">Liv <span class="afdeling-badge">Zang</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #7030A0;">Vrijdag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="planning"><td>14:00</td><td class="naam-cel">Jitske?</td><td><span class="status-pill status-planning">Planning</span></td></tr>
+<tr class="actie-nodig"><td>14:30</td><td class="naam-cel">Tim 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Tygo Bos 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Bas Westenberg 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Ruud 30</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Lianne van de wetering 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="proefles"><td>18:00</td><td class="naam-cel">Merle 30m geappt</td><td><span class="status-pill status-proefles">Proefles</span></td></tr>
+<tr class="proefles"><td>18:30</td><td class="naam-cel">Loes in overleg over starten</td><td><span class="status-pill status-proefles">Proefles</span></td></tr>
+<tr class="proefles"><td>19:00</td><td class="naam-cel">Silke 30m proefles 20 maart<br><span class="note">geappt</span></td><td><span class="status-pill status-proefles">Proefles</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Nynke">
+<div class="docent-title">Nynke <span class="afdeling-badge">Zang</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #C55A11;">Donderdag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Mila Spaan 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="wijziging"><td>16:00</td><td class="naam-cel">Mikki van den Bergh 30m<br><span class="note">Start 26 maart</span><br><span class="note">wachten op inschrijving</span></td><td><span class="status-pill status-gaat-starten">Gaat starten</span></td></tr>
+<tr class="wijziging"><td>16:30</td><td class="naam-cel">Evi Hosmar 30<br><span class="note">Gaat stoppen</span><br><span class="note">Laatste les 16 april</span></td><td><span class="status-pill status-gaat-stoppen">Gaat stoppen</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Sharina Ponsen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Minouk de Scally 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="wijziging"><td>18:30</td><td class="naam-cel">Janke 30m / Danielle 30m proefles 16 april<br><span class="note">Gaat stoppen</span><br><span class="note">Laatste les 26 maart</span></td><td><span class="status-pill status-gaat-stoppen">Gaat stoppen</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Nina Scherpen-Anholts 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Jeroen Kist 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Jesper Korporaal 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:30</td><td class="naam-cel">Ivar Gerrits 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Saranya">
+<div class="docent-title">Saranya <span class="afdeling-badge">Zang</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #4472C4;">Maandag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Haite Schootstra 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Stephanie van Lochem 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Emmie Vervoort 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Lettie van der Velde 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Myrthe Korterink 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Ilse Vijverbergen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Bente Goossen Boom 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Kevin Hoekman 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Lars Bijsterbosch 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:30</td><td class="naam-cel">Anna Tijssen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #BF8F00;">Woensdag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Judith Schleper 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Fiene van der Gaag 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Juul Houpt 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Susan 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Anika Schinkel 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:30</td><td class="naam-cel">Stephan mulders 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Jelle 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Pim Wijnand 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Tijmen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Aron Remmerts 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #C55A11;">Donderdag<span class="afd-label">Zang</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Marije 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Twan ten Hove 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Daan Emming 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Kristel Navarro 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:30</td><td class="naam-cel">Mas 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Laura 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Sylke 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Duoles: Madelien Dekker-Harmanny / Paulien van Lagen  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:00</td><td class="naam-cel">Salome 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>20:30</td><td class="naam-cel">Rick Logtenberg 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Sjoerd">
+<div class="docent-title">Sjoerd <span class="afdeling-badge">Drum</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #BF8F00;">Woensdag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>14:00</td><td class="naam-cel">Sofie van Petegem 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>14:30</td><td class="naam-cel">Thijmen van Dijk  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:00</td><td class="naam-cel">Joas van Dijk  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:20</td><td class="naam-cel">Tim Leijenhorst 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:50</td><td class="naam-cel">Sofie Buijs  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Stijn Venekamp 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Niels van de Burgt 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:30</td><td class="naam-cel">Elias Mesu  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Gijs van Geffen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Eddy Slurink  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:30</td><td class="naam-cel">Jan Henk Slotman  30m / Daniel Mensink 40m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Tijmen">
+<div class="docent-title">Tijmen <span class="afdeling-badge">Drum</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #7030A0;">Vrijdag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="proefles"><td>14:10</td><td class="naam-cel">Lux Bootsma en Tom Elling 27 maart 30m proefles<br><span class="note">nog bevestigen</span></td><td><span class="status-pill status-proefles">Proefles</span></td></tr>
+<tr class="wijziging"><td>14:40</td><td class="naam-cel">Jan Aart Schuld 30m<br><span class="note">Start 27 maart</span><br><span class="note">wachten op inschrijving</span></td><td><span class="status-pill status-gaat-starten">Gaat starten</span></td></tr>
+<tr class="actie-nodig"><td>15:10</td><td class="naam-cel">Leon Werring 20m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>15:30</td><td class="naam-cel">Erika Nooteboom-van der Wal 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Manuel van Munster 20m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:20</td><td class="naam-cel">Noe op den Kamp 20m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+</table></div>
+</div>
+<div class="docent-section" id="section-Tim">
+<div class="docent-title">Tim <span class="afdeling-badge">Drum</span></div>
+<div class="day-block">
+<div class="day-header" style="background-color: #548235;">Dinsdag<span class="afd-label">Drum</span></div>
+<table><tr><th>Tijd</th><th>Leerling</th><th>Status</th></tr>
+<tr class="actie-nodig"><td>16:00</td><td class="naam-cel">Max kijk in de Vegte 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>16:30</td><td class="naam-cel">Olav Visser 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>17:00</td><td class="naam-cel">Melle van Kammen 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:00</td><td class="naam-cel">Josha Selcraig  30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>18:30</td><td class="naam-cel">Ebru Yildiz 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="actie-nodig"><td>19:00</td><td class="naam-cel">Bart Kelderman 30m</td><td><span class="status-pill status-actie">Actief</span></td></tr>
+<tr class="gepauzeerd"><td>—</td><td class="naam-cel">Quoc</td><td><span class="status-pill status-gepauzeerd">Gepauzeerd</span></td></tr>
+</table></div>
+</div>
+</div>
+<div class="update-info">Laatst bijgewerkt: 23-03-2026 om 14:30</div>
+<script>
+
+let current = null;
+function show(name) {
+    document.querySelectorAll('.docent-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    const section = document.getElementById('section-' + name);
+    const btn = document.getElementById('btn-' + name);
+    if (section) section.classList.add('active');
+    if (btn) btn.classList.add('active');
+    current = name;
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const first = document.querySelector('.nav button');
+    if (first) first.click();
+});
+
+</script>
+</body>
+</html>
